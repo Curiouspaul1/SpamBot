@@ -15,12 +15,14 @@ import requests, json, os, time
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, PlainTextContent
 from python_http_client.exceptions import HTTPError
+from helpers import emailcheck
 
 base_url = "http://ngleadersdb.herokuapp.com/api"
 
 r = requests.get(f"{base_url}/senator/all")
 data = r.json()
-emails = [i['sen_email'] for i in data['data']]
+emails = [i['sen_email'] for i in data['data'] if emailcheck(i['sen_email'])]
+
 
 def sendMail():
     message = Mail(
@@ -57,6 +59,5 @@ if __name__ == "__main__":
         sendMail()
         time.sleep(frequency)
     print("Done!")
-    
     
     
